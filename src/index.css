@@ -146,7 +146,7 @@ p {
   width: 90vw;
   margin: 0 auto;
   max-width: 35rem;
-  margin-top: 8rem;
+  margin-top: 4rem;
 }
 @media screen and (min-width: 992px) {
   .section-center {
@@ -164,14 +164,26 @@ Grocery List
 ===============
 */
 .section-center {
+  overflow: hidden;
   background: var(--clr-white);
   border-radius: var(--radius);
   box-shadow: var(--light-shadow);
   transition: var(--transition);
   padding: 2rem;
+  position: relative;
 }
 .section-center:hover {
   box-shadow: var(--dark-shadow);
+}
+.remain {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: rotate(330deg);
 }
 
 .alert {
@@ -202,7 +214,7 @@ Grocery List
   display: flex;
   justify-content: center;
 }
-.grocery {
+.to-do-input {
   padding: 0.25rem;
   padding-left: 1rem;
   background: var(--clr-grey-10);
@@ -215,7 +227,7 @@ Grocery List
   text-transform: capitalize;
 }
 
-.grocery::placeholder {
+.to-do-input::placeholder {
   font-family: var(--ff-secondary);
   color: var(--clr-grey-5);
 }
@@ -244,7 +256,7 @@ Grocery List
   margin-top: 2rem;
 }
 
-.grocery-item {
+.to-do-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -254,11 +266,11 @@ Grocery List
   border-radius: var(--radius);
   text-transform: capitalize;
 }
-.grocery-item:hover {
+.to-do-item:hover {
   color: var(--clr-grey-5);
   background: var(--clr-grey-10);
 }
-.grocery-item:hover .title {
+.to-do-item:hover .title {
   color: var(--clr-grey-5);
 }
 .title {
@@ -330,23 +342,52 @@ Grocery List
 .clear-btn:hover {
   color: var(--clr-red-dark);
 }
-
 .deleted {
   text-decoration: line-through;
   cursor: pointer;
   position: relative;
 }
+.search {
+  margin: 1rem auto;
+}
 
-.tool-tip {
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: var(--radius);
-  width: 100px;
-  height: 50px;
-  top: 0;
-  left: 0;
-  transform: translate(-40%, -110%);
-  background: var(--clr-grey-8);
+.search input {
+  width: 100%;
+  border: 2px solid transparent;
+}
+
+.search input:focus {
+  border: 2px solid var(--clr-primary-5);
+  outline: none;
+}
+.search-container {
+  margin-top: 1rem;
+}
+.remain {
+  margin: 0.4rem;
+}
+progress {
+  margin-top: 1rem;
+  background: var(--clr-primary-10);
+  width: 100%;
+  border: 0;
+  height: 40px;
+  border-radius: 15px;
+}
+progress::-webkit-progress-bar {
+  background: var(--clr-primary-10);
+  border: 0;
+  height: 40px;
+  border-radius: 15px;
+}
+progress::-webkit-progress-value {
+  background: var(--clr-primary-5);
+  border: 0;
+  height: 40px;
+  border-radius: 15px;
+}
+progress::-moz-progress-bar {
+  border: 0;
+  height: 40px;
+  border-radius: 15px;
 }

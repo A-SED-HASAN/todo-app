@@ -1,25 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import Alert from './Alert'
-import List from './Lists/List'
-import RemovedList from './Lists/RemovedList'
-const getLocalStorage = () => {
-  let list = localStorage.getItem('list')
-
-  if (list) {
-    return JSON.parse(localStorage.getItem('list'))
-  } else {
-    return []
-  }
-}
-const getLocalStorageDone = () => {
-  let doneList = localStorage.getItem('doneList')
-
-  if (doneList) {
-    return JSON.parse(localStorage.getItem('doneList'))
-  } else {
-    return []
-  }
-}
+import Alert from './components/Alert/Alert'
+import Counter from './components/Counter/Counter'
+import List from './components/Lists/List'
+import DoneList from './components/Lists/DoneList'
+import Search from './components/Search/Search'
+import { getLocalStorage, getLocalStorageDone, showTime } from './functions'
+import Progress from './components/Progress/Progress'
 
 function App() {
   const [name, setName] = useState('')
@@ -30,10 +16,11 @@ function App() {
   const [alert, setAlert] = useState({ show: false, msg: '', type: '' })
   const [deletable, setDeletable] = useState(true)
   const [donAble, setDoneAble] = useState(true)
+  const bothList = [...list, ...doneList]
 
   const submitHandler = (e) => {
     e.preventDefault()
-    if (!name) {
+    if (!name || name === ' ') {
       showAlert(true, 'danger', 'please enter a duty')
     } else if (name && isEditing) {
       setList(
@@ -64,8 +51,13 @@ function App() {
     showAlert(true, 'success', 'list is empty 😍')
     setList([])
     setDoneList([...doneList, ...list])
+    setName('')
+    setEditID(null)
+    setIsEditing(false)
+    setDeletable(true)
+    setDoneAble(true)
   }
-  const clearDeletedList = () => {
+  const clearDoneList = () => {
     showAlert(true, 'success', 'donned duty list is empty 😍')
     setDoneList([])
   }
@@ -74,7 +66,6 @@ function App() {
       showAlert(true, 'danger', 'Item Removed From Todo')
       const newList = list.filter((item) => item.id !== id)
       setList(newList)
-      console.log(deletable)
     } else {
       showAlert(true, 'danger', 'you want delete it or edit it?')
     }
@@ -101,11 +92,6 @@ function App() {
     setDeletable(false)
     setDoneAble(false)
   }
-  const showTime = (id) => {
-    const whenCreated = new Date(Number(id))
-    const formalTime = `${whenCreated.getHours()} : ${whenCreated.getMinutes()} : ${whenCreated.getSeconds()} `
-    return formalTime
-  }
   const showTimeFromDone = (id) => {
     const whoSID = doneList.filter((item) => item.id === id)
     return Number(whoSID[0].id)
@@ -117,6 +103,9 @@ function App() {
 
   return (
     <>
+      {(list.length > 0 || doneList.length > 0) && (
+        <Search bothList={bothList} />
+      )}
       <section className='section-center'>
         <form onSubmit={submitHandler} className='grocery-form'>
           {alert.show && (
@@ -126,7 +115,7 @@ function App() {
           <div className='form-control'>
             <input
               type='text'
-              className='grocery'
+              className='to-do-input'
               placeholder='Add To Do 💪🏼'
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -136,7 +125,6 @@ function App() {
             </button>
           </div>
         </form>
-
         {list.length > 0 && (
           <div className='grocery-container'>
             <List
@@ -146,22 +134,27 @@ function App() {
               showTime={showTime}
               doneItem={doneItem}
             />
+            {list.length > 0 && (
+              <Progress allDuty={bothList.length} doneDuty={doneList.length} />
+            )}
             <button className='clear-btn' onClick={clearList}>
               All Done
             </button>
+            <Counter text='todo' number={list.length} />
           </div>
         )}
       </section>
       {doneList.length > 0 && (
         <section className='section-center'>
           <div className='grocery-container'>
-            <RemovedList
+            <DoneList
               deletedItems={doneList}
               showTimeFromDone={showTimeFromDone}
             />
-            <button className='clear-btn' onClick={clearDeletedList}>
+            <button className='clear-btn' onClick={clearDoneList}>
               Clear Items
             </button>
+            <Counter text='todo' number={doneList.length} />
           </div>
         </section>
       )}
